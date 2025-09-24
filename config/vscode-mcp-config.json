@@ -1,0 +1,29 @@
+{
+	"servers": {
+		"playwright": {
+			"command": "npx",
+			"args": [
+				"@playwright/mcp@latest"
+			],
+			"type": "stdio"
+		},
+		"terraform": {
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"hashicorp/terraform-mcp-server"
+			]
+		},
+		"burp": {
+			"type": "stdio",
+			"command": "/home/kali/ARD/mcp-proxy/burp-mcp-proxy.sh",
+			"args": [],
+			"env": {
+				"BURP_MCP_URL": "http://127.0.0.1:9876"
+			}
+		}
+	},
+	"inputs": []
+}
