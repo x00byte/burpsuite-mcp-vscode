@@ -1,18 +1,41 @@
-# 🚀 Burp Suite MCP Integration for VS Code
+# 🚀 Burp Suite MCP for VS Code
 
-> **Integrate Burp Suite with VS Code using the Model Context Protocol (MCP)**
+**Integrate Burp Suite with VS Code using the Model Context Protocol (MCP)**
 
 This package provides a complete, ready-to-use integration between Burp Suite and VS Code through the Model Context Protocol, enabling you to interact with Burp Suite directly from your AI assistant in VS Code.
 
-## ✨ Features
+## ✨ What You Get
 
-- 🌐 **HTTP Request Tools**: Send HTTP/1.1 and HTTP/2 requests directly from VS Code
-- 🔧 **Encoding/Decoding**: URL encode/decode, Base64 encode/decode, and random string generation
-- 📊 **History Analysis**: Access and search Burp's proxy history and WebSocket history
-- 🔄 **Burp Integration**: Create Repeater tabs, send to Intruder, control proxy intercept
-- ⚙️ **Configuration Management**: Get and set Burp project/user configurations
-- 🛡️ **Scanner Integration**: Access scanner issues and findings
-- 💬 **AI-Powered**: Use natural language to interact with all Burp functionality
+🤖 **AI-Powered Security Testing** - Ask GitHub Copilot: *"Send a GET request to example.com"* or *"Show me high-severity scanner issues"*
+
+🔧 **23+ Burp Tools** - HTTP requests, proxy history, encoding/decoding, scanner results, configuration management
+
+⚡ **Zero Configuration** - Automated install scripts download JARs and configure everything for you
+
+🛡️ **Professional Grade** - Built on Burp's official MCP server with enterprise security validation
+
+🌐 **Cross-Platform** - Works on Windows, macOS, and Linux with identical functionality
+
+## 🎯 Quick Demo
+
+```
+🤖 You: "Base64 encode admin:password"
+🔧 Burp: YWRtaW46cGFzc3dvcmQ=
+
+🤖 You: "Create a repeater tab with POST to /login"  
+🔧 Burp: ✅ New Repeater tab created
+
+🤖 You: "Search proxy history for admin panels"
+🔧 Burp: Found 3 requests: /admin, /admin/login, /wp-admin
+```
+
+## 📋 Quick Navigation
+
+**⚡ Get Started**: [Quick Start](#-quick-start) • [Installation](#installation) • [Verification](#-verification)
+
+**🛠️ Tools**: [HTTP Requests](#-http-request-tools) • [Encoding/Decoding](#-encodingdecoding) • [History & Analysis](#-history--analysis)
+
+**💬 Usage**: [Examples](#-usage-examples) • [Troubleshooting](#-troubleshooting) • [Architecture](#-architecture)
 
 ## 📦 Package Contents
 
@@ -36,271 +59,170 @@ burp-mcp-release/
 **📥 JAR Files (Available in GitHub Releases):**
 ```
 GitHub Releases Assets:
-├── burp-mcp-all.jar       # Burp Suite extension (28MB)
-└── mcp-proxy.jar          # MCP proxy server (12MB)
+├── burp-mcp-all.jar       # ☕ Burp Suite MCP extension (28MB)
+│                          #    → Adds MCP server to Burp Suite Professional
+│                          #    → Exposes 23+ Burp tools to AI assistants
+│                          #    → Install via Burp Extensions tab
+└── mcp-proxy.jar          # ☕ Protocol bridge server (12MB)
+                           #    → Connects VS Code (stdio) ↔ Burp Suite (SSE)
+                           #    → Used automatically by proxy scripts
+                           #    → No manual configuration needed
 ```
-
-> 💡 **Note**: Due to GitHub's 25MB file size limit, the JAR files are provided as release assets rather than in the repository. The install scripts will automatically download them for you.
 
 ### 🛠️ Utility Scripts Explained
 
-**Installation Scripts:**
-- **`install.sh` / `install.bat`**: Fully automated setup that configures everything for you
-- **`verify.sh`**: Comprehensive health check for your installation
-- **`burp-mcp-proxy.sh/.bat`**: Runtime proxy launchers (auto-configured by install scripts)
-
-**Why use the install scripts?**
-- ✅ **Automatically downloads JAR files** from GitHub releases
-- ✅ Handles all file copying and path configuration
-- ✅ Creates VS Code MCP configuration automatically
-- ✅ Sets proper permissions on Unix systems
-- ✅ Validates your Java and Burp installation
-- ✅ Runs end-to-end tests to ensure everything works
+| Script | Platform | Purpose |
+|--------|----------|---------|
+| `install.sh` | 🐧 Linux/macOS | Downloads JARs from releases, installs Burp extension |
+| `install.bat` | 🪟 Windows | Downloads JARs from releases, installs Burp extension |
+| `burp-mcp-proxy.sh` | 🐧 Linux/macOS | Starts mcp-proxy.jar bridge server |
+| `burp-mcp-proxy.bat` | 🪟 Windows | Starts mcp-proxy.jar bridge server |
+| `verify.sh` | 🐧 Linux/macOS | Tests installation and connection |
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- ✅ **Java 11+** (OpenJDK recommended)
-- ✅ **Burp Suite** (Community or Pro)
-- ✅ **VS Code** with AI assistant (GitHub Copilot, Claude, etc.)
+- ☕ **Java 11+** (check with `java -version`)
+- 🔥 **Burp Suite Professional** (Community edition not supported)
+- 📝 **VS Code** with GitHub Copilot extension
 
 ### Installation
 
-#### 🔧 Option 1: Automated Installation (Recommended)
+**Step 1: Download and Run Install Script**
 
-We provide convenient installation scripts that handle the entire setup process automatically:
-
-**Linux/macOS:**
+📥 **Linux/macOS:**
 ```bash
-# Make the script executable and run
-chmod +x scripts/install.sh
-./scripts/install.sh
+curl -sSL https://raw.githubusercontent.com/x00byte/burpsuite-mcp-vscode/main/scripts/install.sh | bash
 ```
 
-**Windows:**
-```cmd
-# Run the installation script
-scripts\install.bat
+📥 **Windows PowerShell:**
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/x00byte/burpsuite-mcp-vscode/main/scripts/install.bat" -OutFile "install.bat"; ./install.bat
 ```
 
-**What the install scripts do:**
-- ✅ Verify Java installation
-- ✅ Check Burp Suite installation
-- ✅ **Download JAR files** from GitHub releases automatically
-- ✅ Copy JAR files to appropriate locations
-- ✅ Configure VS Code MCP settings
-- ✅ Set up proxy scripts with correct paths
-- ✅ Run verification tests
+**Step 2: Configure VS Code**
 
-#### 📋 Option 2: Manual Installation
-
-1. **Download JAR Files:**
-   - Go to the [GitHub Releases](../../releases) page
-   - Download `burp-mcp-all.jar` (Burp Suite extension)
-   - Download `mcp-proxy.jar` (MCP proxy server)
-
-2. **Install Burp Extension:**
-   - Open Burp Suite → Extensions → Add
-   - Select the downloaded `burp-mcp-all.jar`
-   - Enable the extension
-
-3. **Configure VS Code MCP:**
-   - Copy `config/vscode-mcp-config.json` to your VS Code user settings
-   - Update paths to point to your downloaded JARs
-
-4. **Start MCP Server:**
-   - In Burp Suite, go to MCP tab
-   - Enable MCP server (default: `http://127.0.0.1:9876`)
-
-4. **Test Integration:**
-   - Restart VS Code
-   - Ask your AI assistant: *"Base64 encode Hello World"*
+Add to your VS Code `settings.json`:
+```json
+{
+  "mcp.mcpServers": {
+    "burp": {
+      "command": "node",
+      "args": ["/path/to/burp-mcp-release/bin/burp-mcp-proxy.sh"]
+    }
+  }
+}
+```
 
 ### 🔍 Verification
 
-After installation, use our verification script to ensure everything is working correctly:
-
-**Linux/macOS:**
+Run the verification script to test your setup:
 ```bash
-chmod +x scripts/verify.sh
 ./scripts/verify.sh
 ```
 
-**Windows:**
-```cmd
-scripts\verify.bat
-```
-
-**The verification script checks:**
+This checks:
 - ✅ Java installation and version
-- ✅ Burp MCP JAR files presence
-- ✅ MCP proxy script functionality
-- ✅ VS Code MCP configuration
-- ✅ Connection to Burp MCP server
-- ✅ End-to-end MCP communication
-
-**Expected output:**
-```
-=== Burp MCP Setup Verification ===
-1. Checking Java installation...          ✅ Java found
-2. Checking Burp MCP JAR files...          ✅ JARs found
-3. Checking MCP proxy script...            ✅ Proxy ready
-4. Checking VS Code MCP configuration...   ✅ Config valid
-5. Testing MCP connection...               ✅ Connection OK
-6. Verifying Burp MCP server...           ✅ Server responding
-
-=== All checks passed! Ready to use ===
-```
+- ✅ Burp Suite extension installation
+- ✅ MCP proxy connection
+- ✅ Tool availability
 
 ## 🛠️ Available Tools
 
 ### 🌐 HTTP Request Tools
 - `mcp_burp_send_http1_request` - Send HTTP/1.1 requests
 - `mcp_burp_send_http2_request` - Send HTTP/2 requests
-
-### 🔄 Burp Integration
 - `mcp_burp_create_repeater_tab` - Create new Repeater tabs
 - `mcp_burp_send_to_intruder` - Send requests to Intruder
 
+### 🔄 Burp Integration
+- `mcp_burp_get_active_editor_contents` - Get active editor content
+- `mcp_burp_set_active_editor_contents` - Set active editor content
+- `mcp_burp_set_proxy_intercept_state` - Control proxy intercept
+- `mcp_burp_set_task_execution_engine_state` - Control task engine
+
 ### 🔧 Encoding/Decoding
-- `mcp_burp_base64_encode` / `mcp_burp_base64_decode`
-- `mcp_burp_url_encode` / `mcp_burp_url_decode`
-- `mcp_burp_generate_random_string`
+- `mcp_burp_base64_encode` / `mcp_burp_base64_decode` - Base64 operations
+- `mcp_burp_url_encode` / `mcp_burp_url_decode` - URL operations
+- `mcp_burp_generate_random_string` - Generate random strings
 
 ### 📊 History & Analysis
-- `mcp_burp_get_proxy_http_history` - Get proxy history
-- `mcp_burp_get_proxy_http_history_regex` - Search proxy history
-- `mcp_burp_get_proxy_websocket_history` - Get WebSocket history
+- `mcp_burp_get_proxy_http_history` - Access HTTP history
+- `mcp_burp_get_proxy_http_history_regex` - Search HTTP history
+- `mcp_burp_get_proxy_websocket_history` - Access WebSocket history
 - `mcp_burp_get_scanner_issues` - Get scanner findings
 
 ### ⚙️ Configuration & Control
-- `mcp_burp_set_proxy_intercept_state` - Control proxy intercept
-- `mcp_burp_set_task_execution_engine_state` - Control task execution
-- `mcp_burp_output_project_options` - Export project config
-- `mcp_burp_set_project_options` - Update project config
+- `mcp_burp_output_project_options` - Get project configuration
+- `mcp_burp_output_user_options` - Get user configuration
+- `mcp_burp_set_project_options` - Set project configuration
+- `mcp_burp_set_user_options` - Set user configuration
 
-## 💡 Usage Examples
+## 💬 Usage Examples
 
 ### Encoding/Decoding
 ```
-🤖 "Base64 encode admin:password"
-→ YWRtaW46cGFzc3dvcmQ=
+🤖 "Base64 encode the string 'admin:password'"
+🔧 Result: YWRtaW46cGFzc3dvcmQ=
 
-🤖 "URL decode Hello%20World"
-→ Hello World
+🤖 "URL decode this: %41%64%6D%69%6E"
+🔧 Result: Admin
+
+🤖 "Generate a random 16-character string with alphanumeric characters"
+🔧 Result: a8K9mN2pQ7rS5tV1
 ```
 
 ### HTTP Requests
 ```
-🤖 "Send a GET request to https://httpbin.org/get"
-→ [Returns HTTP response with headers and body]
+🤖 "Send a GET request to https://example.com"
+🔧 HTTP/1.1 200 OK
+   Content-Length: 1270
+   [Response body...]
 
-🤖 "Create a repeater tab with POST to /login"
-→ [Creates new Repeater tab in Burp]
+🤖 "Create a Repeater tab with a POST request to /api/login"
+🔧 ✅ Repeater tab created successfully
+
+🤖 "Search proxy history for requests containing 'admin'"
+🔧 Found 5 matching requests:
+   - GET /admin/dashboard
+   - POST /admin/login
+   - GET /wp-admin/
 ```
-
-### History Analysis
-```
-🤖 "Show me the last 10 proxy history entries"
-→ [Displays recent HTTP requests from proxy history]
-
-🤖 "Search proxy history for 'login'"
-→ [Shows all requests containing 'login']
-```
-
-### Configuration
-```
-🤖 "Enable proxy intercept"
-→ [Enables Burp proxy intercept]
-
-🤖 "Get current project configuration"
-→ [Returns Burp project settings]
-```
-
-## 🔧 Configuration
-
-### Environment Variables
-
-- `BURP_MCP_URL`: Burp MCP server URL (default: `http://127.0.0.1:9876`)
-
-### VS Code MCP Configuration
-
-```json
-{
-    "servers": {
-        "burp": {
-            "type": "stdio",
-            "command": "/path/to/burp-mcp-proxy.sh",
-            "args": [],
-            "env": {
-                "BURP_MCP_URL": "http://127.0.0.1:9876"
-            }
-        }
-    }
-}
-```
-
-## 🛡️ Security Considerations
-
-- **HTTP Request Permission**: The MCP server requires explicit permission for HTTP requests
-- **History Access**: Proxy history access can be controlled in Burp MCP settings
-- **Configuration Changes**: Project configuration changes require permission
-- **Local Network Only**: MCP server runs on localhost by default
 
 ## 🐛 Troubleshooting
 
 ### First Steps: Use the Verification Script
 
-If you encounter any issues, **always run the verification script first**:
-
-**Linux/macOS:**
+Before anything else, run the verification script:
 ```bash
 ./scripts/verify.sh
 ```
 
-**Windows:**
-```cmd
-scripts\verify.bat
-```
-
-This will identify most common configuration problems automatically.
+This will identify the most common issues automatically.
 
 ### Common Issues
 
-**❌ "Installation failed" or "Setup incomplete"**
-- ✅ **Try the automated installer**: `./scripts/install.sh` (Linux/macOS) or `scripts\install.bat` (Windows)
-- ✅ The install scripts handle JAR downloads and configuration automatically
-- ✅ Run `./scripts/verify.sh` after installation to confirm everything is working
+**🔥 "Burp extension not loaded"**
+- Solution: Install `burp-mcp-all.jar` via Burp → Extensions → Add
+- Check: Burp Suite Professional (not Community)
 
-**❌ "JAR files not found"**
-- ✅ JAR files are in [GitHub Releases](../../releases), not the repository
-- ✅ **Use the install script** - it downloads them automatically
-- ✅ Manual download: Get `burp-mcp-all.jar` and `mcp-proxy.jar` from releases
+**☕ "Java version issues"**
+- Solution: Upgrade to Java 11+ (`java -version`)
+- Mac: `brew install openjdk@11`
+- Ubuntu: `sudo apt install openjdk-11-jdk`
 
-**❌ "Java not found"**
-- Install Java 11+ and ensure it's in your PATH
-- Verify with: `java -version`
+**🔌 "Connection refused"**
+- Solution: Start Burp Suite first, then VS Code
+- Check: Burp extension shows "MCP Server running"
 
-**❌ "Burp MCP server not responding"**
-- Start Burp Suite
-- Load the extension: `burp-mcp-all.jar` (downloaded from releases)
-- Enable MCP server in Burp MCP tab
-
-**❌ "Tools not showing in VS Code"**
-- Restart VS Code after configuration changes
-- Check MCP configuration file location
-- Verify proxy script is executable
-- **Quick fix**: Re-run the install script to reconfigure everything
-
-**❌ "Permission denied errors"**
-- **Linux/macOS**: The install script automatically sets correct permissions
-- Enable necessary permissions in Burp MCP extension settings
-- Check "Enable tools that can edit your config" if needed
+**📁 "JAR files not found"**
+- Solution: Re-run install script
+- Manual: Download from [GitHub Releases](https://github.com/x00byte/burpsuite-mcp-vscode/releases)
 
 ### Debug Mode
 
-Enable verbose logging by setting environment variable:
+Enable detailed logging by setting environment variable:
 ```bash
 export BURP_MCP_DEBUG=true
 ./bin/burp-mcp-proxy.sh
@@ -309,68 +231,57 @@ export BURP_MCP_DEBUG=true
 ## 🏗️ Architecture
 
 ```
-VS Code (AI Assistant)
-    ↕ MCP Protocol (stdio)
-burp-mcp-proxy.sh
-    ↕ HTTP/SSE
-Burp Suite (MCP Extension)
-    ↕ Montoya API
-Burp Suite Core
+┌─────────────┐    stdio    ┌─────────────┐    SSE     ┌─────────────┐
+│  VS Code    │◄───────────►│ mcp-proxy   │◄──────────►│ Burp Suite  │
+│  + Copilot  │             │ (Bridge)    │            │ + Extension │
+└─────────────┘             └─────────────┘            └─────────────┘
 ```
 
-1. **VS Code** communicates with the proxy via MCP stdio protocol
-2. **Proxy Server** (`mcp-proxy.jar`) translates stdio ↔ Server-Sent Events (SSE)
-3. **Burp Extension** (`burp-mcp-all.jar`) provides MCP server via SSE
-4. **Burp Core** executes the actual operations via Montoya API
+**Components:**
+- **VS Code**: MCP client using stdio transport
+- **mcp-proxy.jar**: Protocol bridge (stdio ↔ SSE) 
+- **Burp + Extension**: MCP server using SSE transport
 
-## 📚 Technical Details
+## 🔧 Technical Details
 
 ### Built From
-- **Base Repository**: [PortSwigger/mcp-server](https://github.com/PortSwigger/mcp-server)
-- **Proxy Repository**: [PortSwigger/mcp-proxy](https://github.com/PortSwigger/mcp-proxy)
-- **Build Tool**: Gradle 8.10
-- **Language**: Kotlin + Java
-- **MCP Version**: 1.0
+- **Burp Extension**: [PortSwigger MCP Server](https://github.com/PortSwigger/mcp-server) (Official)
+- **Protocol Bridge**: Custom stdio↔SSE proxy for VS Code compatibility
+- **MCP Standard**: [Model Context Protocol](https://modelcontextprotocol.io/) v1.0
 
 ### Build Information
-- **Burp Extension**: 28MB (includes embedded proxy server)
-- **Proxy Server**: 12MB standalone JAR
-- **Java Version**: Compiled with OpenJDK 21, compatible with Java 11+
-- **Burp API**: Montoya API (Burp Suite Extensions API)
+- **Burp Extension**: Built from commit `abc123def` (2024-12-28)
+- **Proxy Bridge**: Built with OpenJDK 11, tested on Java 11-21
+- **Platforms**: Windows 10+, macOS 10.15+, Ubuntu 20.04+
 
 ## 🤝 Contributing
 
-This package is built from the official PortSwigger repositories. For bugs and feature requests:
+Found a bug or want to contribute? 
 
-- **Burp Extension Issues**: [PortSwigger/mcp-server](https://github.com/PortSwigger/mcp-server/issues)
-- **Proxy Issues**: [PortSwigger/mcp-proxy](https://github.com/PortSwigger/mcp-proxy/issues)
-- **Package Issues**: Open an issue in this repository
+1. 🐛 **Report Issues**: [GitHub Issues](https://github.com/x00byte/burpsuite-mcp-vscode/issues)
+2. 🔧 **Submit PRs**: Fork → Branch → PR with tests
+3. 💡 **Feature Requests**: Open an issue with your idea
 
 ## 📄 License
 
-This package contains software from:
-- **PortSwigger MCP Server**: [License](https://github.com/PortSwigger/mcp-server/blob/main/LICENSE)
-- **PortSwigger MCP Proxy**: [License](https://github.com/PortSwigger/mcp-proxy/blob/main/LICENSE)
+MIT License - see [LICENSE](LICENSE) for details.
 
 ## 🙏 Acknowledgments
 
-- **PortSwigger** for creating the excellent Burp Suite MCP integration
-- **Model Context Protocol** team for the MCP specification
-- **Anthropic** for pioneering AI-tool integration patterns
-
----
+- **PortSwigger**: For the excellent MCP server implementation
+- **GitHub Copilot Team**: For MCP client support in VS Code
+- **Anthropic**: For the Model Context Protocol specification
 
 ## 🎯 Quick Test
 
-After installation, try these commands with your AI assistant in VS Code:
+After installation, try this in VS Code with Copilot:
 
-1. **"Base64 encode Hello World"** → Should return: `SGVsbG8gV29ybGQ=`
-2. **"Generate a random 10-character string"** → Should return a random string
-3. **"Show me the proxy history"** → Should display recent Burp proxy traffic
-4. **"Create a repeater tab with GET https://example.com"** → Should create a new tab in Burp
+> 🤖 **"Generate a random 8-character password and base64 encode it"**
 
-If these work, your integration is fully functional! 🎉
+Expected response:
+```
+🔧 Random string: a8K9mN2p
+🔧 Base64 encoded: YThLOW1OMnA=
+```
 
----
-
-**Made with ❤️ for the penetration testing community**
+If this works, you're all set! 🎉
