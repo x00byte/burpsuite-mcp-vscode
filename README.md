@@ -16,14 +16,12 @@ This package provides a complete, ready-to-use integration between Burp Suite an
 
 ## 📦 Package Contents
 
+**Repository Structure:**
 ```
 burp-mcp-release/
 ├── bin/                    # Runtime executables
 │   ├── burp-mcp-proxy.sh   # Linux/macOS proxy launcher
 │   └── burp-mcp-proxy.bat  # Windows proxy launcher
-├── jars/                   # Pre-compiled Java components
-│   ├── burp-mcp-all.jar    # Burp Suite extension (28MB)
-│   └── mcp-proxy.jar       # MCP proxy server (12MB)
 ├── scripts/                # Automation and utilities
 │   ├── install.sh          # 🔧 Linux/macOS automated installer
 │   ├── install.bat         # 🔧 Windows automated installer
@@ -35,6 +33,15 @@ burp-mcp-release/
 └── README.md              # This setup guide
 ```
 
+**📥 JAR Files (Available in GitHub Releases):**
+```
+GitHub Releases Assets:
+├── burp-mcp-all.jar       # Burp Suite extension (28MB)
+└── mcp-proxy.jar          # MCP proxy server (12MB)
+```
+
+> 💡 **Note**: Due to GitHub's 25MB file size limit, the JAR files are provided as release assets rather than in the repository. The install scripts will automatically download them for you.
+
 ### 🛠️ Utility Scripts Explained
 
 **Installation Scripts:**
@@ -43,6 +50,7 @@ burp-mcp-release/
 - **`burp-mcp-proxy.sh/.bat`**: Runtime proxy launchers (auto-configured by install scripts)
 
 **Why use the install scripts?**
+- ✅ **Automatically downloads JAR files** from GitHub releases
 - ✅ Handles all file copying and path configuration
 - ✅ Creates VS Code MCP configuration automatically
 - ✅ Sets proper permissions on Unix systems
@@ -79,6 +87,7 @@ scripts\install.bat
 **What the install scripts do:**
 - ✅ Verify Java installation
 - ✅ Check Burp Suite installation
+- ✅ **Download JAR files** from GitHub releases automatically
 - ✅ Copy JAR files to appropriate locations
 - ✅ Configure VS Code MCP settings
 - ✅ Set up proxy scripts with correct paths
@@ -86,16 +95,21 @@ scripts\install.bat
 
 #### 📋 Option 2: Manual Installation
 
-1. **Install Burp Extension:**
+1. **Download JAR Files:**
+   - Go to the [GitHub Releases](../../releases) page
+   - Download `burp-mcp-all.jar` (Burp Suite extension)
+   - Download `mcp-proxy.jar` (MCP proxy server)
+
+2. **Install Burp Extension:**
    - Open Burp Suite → Extensions → Add
-   - Select: `jars/burp-mcp-all.jar`
+   - Select the downloaded `burp-mcp-all.jar`
    - Enable the extension
 
-2. **Configure VS Code MCP:**
+3. **Configure VS Code MCP:**
    - Copy `config/vscode-mcp-config.json` to your VS Code user settings
-   - Update paths to match your installation
+   - Update paths to point to your downloaded JARs
 
-3. **Start MCP Server:**
+4. **Start MCP Server:**
    - In Burp Suite, go to MCP tab
    - Enable MCP server (default: `http://127.0.0.1:9876`)
 
@@ -256,8 +270,13 @@ This will identify most common configuration problems automatically.
 
 **❌ "Installation failed" or "Setup incomplete"**
 - ✅ **Try the automated installer**: `./scripts/install.sh` (Linux/macOS) or `scripts\install.bat` (Windows)
-- ✅ The install scripts handle most configuration issues automatically
+- ✅ The install scripts handle JAR downloads and configuration automatically
 - ✅ Run `./scripts/verify.sh` after installation to confirm everything is working
+
+**❌ "JAR files not found"**
+- ✅ JAR files are in [GitHub Releases](../../releases), not the repository
+- ✅ **Use the install script** - it downloads them automatically
+- ✅ Manual download: Get `burp-mcp-all.jar` and `mcp-proxy.jar` from releases
 
 **❌ "Java not found"**
 - Install Java 11+ and ensure it's in your PATH
@@ -265,7 +284,7 @@ This will identify most common configuration problems automatically.
 
 **❌ "Burp MCP server not responding"**
 - Start Burp Suite
-- Load the extension: `jars/burp-mcp-all.jar`
+- Load the extension: `burp-mcp-all.jar` (downloaded from releases)
 - Enable MCP server in Burp MCP tab
 
 **❌ "Tools not showing in VS Code"**
